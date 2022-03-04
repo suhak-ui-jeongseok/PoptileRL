@@ -16,6 +16,7 @@ class Map:
         self.dy = (0, 0, -1, 1)
 
         # init map
+        # [TODO]: 맵을 내부에서 생성하는 경우와 맵을 외부에서 받아서 생성하는 경우 두 가지로 나눠야 함
         self.map: List[List[int]] = [[-1 for _ in range(self.col)] for _ in range(self.row)]
         self.generate_row()
         self.update_map()
@@ -26,13 +27,14 @@ class Map:
         선택한 타일에서 같은 색상이 있는지 탐색하고, 그 개수를 반환하는 함수
         :return:
         """
+
+        n_tiles: int = self.matching_color_tiles(row, col)
+        self.update_map()
         check_game_over: bool = self.check_game_over()
         if check_game_over:
             return -1
-        n_tiles: int = self.matching_color_tiles(row, col)
-        self.generate_row()
-        self.update_map()
 
+        self.generate_row()
         return n_tiles
 
     def matching_color_tiles(self, row, col):

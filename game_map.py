@@ -1,5 +1,6 @@
 from collections import deque
 from random import randrange
+from typing import List
 
 
 class Map:
@@ -39,17 +40,17 @@ class Map:
 
     def matching_color_tiles(self, row, col) -> int:
         queue: deque[Tuple[int, int]] = deque([(row, col)])
+        color: int = self.map[row][col]
         visited: List[List[bool]] = [[False for _ in range(self.col)] for _ in range(self.row)]
         visited[row][col] = True
         self.delete_tile(row, col)
 
-        n_tiles = self._bfs(queue, visited)
+        n_tiles = self._bfs(queue, visited, color)
 
         return n_tiles
 
-    def _bfs(self, queue, visited) -> int:
+    def _bfs(self, queue: deque, visited: List[List[bool]], color: int) -> int:
         n_tiles = 1
-        color: int = self.map[row][col]
 
         while queue:
             cur_row, cur_col = queue.popleft()

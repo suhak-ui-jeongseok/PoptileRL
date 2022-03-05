@@ -5,7 +5,7 @@ from random import randrange
 class Map:
     """
     맵을 관리하는 클래스
-    기본 맵은 8x15(row, col)로 구성
+    기본 맵은 15x8(row, col)로 구성
     """
     def __init__(self, row=15, col=8, color=3):
         self.row = row
@@ -37,27 +37,28 @@ class Map:
         self.generate_row()
         return n_tiles
 
-    def matching_color_tiles(self, row, col):
-        color: int = self.map[row][col]
-        queue: deque[Tuple[int, int, int]] = deque([(row, col, color)])
+    def matching_color_tiles(self, row, col) -> int:
+        queue: deque[Tuple[int, int]] = deque([(row, col)])
         visited: List[List[bool]] = [[False for _ in range(self.col)] for _ in range(self.row)]
         visited[row][col] = True
         self.delete_tile(row, col)
 
-        n_tiles = self._bfs(queue, visited, color)
+        n_tiles = self._bfs(queue, visited)
 
         return n_tiles
 
-    def _bfs(self, queue, visited, color):
+    def _bfs(self, queue, visited) -> int:
         n_tiles = 1
+        color: int = self.map[row][col]
+
         while queue:
-            cur_row, cur_col, _ = queue.popleft()
+            cur_row, cur_col = queue.popleft()
             for i in range(4):
                 mv_row = cur_row + self.dx[i]
                 mv_col = cur_col + self.dy[i]
                 if 0 <= mv_row < self.row and 0 <= mv_col < self.col:
                     if not visited[mv_row][mv_col] and self.map[mv_row][mv_col] == color:
-                        queue.append((mv_row, mv_col, color))
+                        queue.append((mv_row, mv_col))
                         visited[mv_row][mv_col] = True
                         self.delete_tile(mv_row, mv_col)
                         n_tiles += 1
@@ -77,7 +78,7 @@ class Map:
             for row in range(self.row):
                 if self.map[row][col] >= 0:
                     tile_value = self.map[row][col]
-                    self.map[row][col] = -1
+                    self.delete_tile(row, col)
 
                     now_tile_row = row
                     while now_tile_row > 0:
@@ -88,17 +89,19 @@ class Map:
 
                     self.map[now_tile_row][col] = tile_value
 
-    def display_map(self):
+    def display(self):
         for row in self.map:
             print(row)
 
     def check_game_over(self) -> bool:
         """
+        check game over.
+        if top tile row >= max_row
         game over -> True
-        :return:
+        :return: bool, game over state
         """
         for col in range(self.col):
-            if self.map[self.row-1][col] >= 0:
+            if self.map[-1][col] >= 0:
                 return True
 
         return False

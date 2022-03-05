@@ -21,7 +21,7 @@ class PopTile:
 
     def run(self):
         while True:
-            self.map.display_map()
+            self.map.display()
             x, y = map(int, input().split())
             n_tile: int = self.map.pop_tile(x, y)
             if n_tile <= 0:
@@ -37,12 +37,12 @@ class PopTile:
         sys.stdout.write(f'Score: {str(self.score)}\n')
 
     def game_over(self):
-        game_info: Dict[str, object] = {
+        game_result: Dict[str, int] = {
             'Score': self.score,
             'Touch': self.touch,
-            'Score/touch': self.tiles/self.touch
+            'Tiles/touch': self.tiles/self.touch
         }
-        sys.stdout.write(str(game_info))
+        sys.stdout.write(str(game_result))
 
 
 pop_tile = PopTile()

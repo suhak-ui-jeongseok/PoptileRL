@@ -32,32 +32,22 @@ class Manager:
         3. press start button by click
         '''
         try:
-            animation_toggle_selector = (
-                By.XPATH,
-                '//*[@id="root"]/div/div/div[1]/button'
-            )
-            animation_toggle_element = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located(animation_toggle_selector)
-            )
-            animation_toggle_element.click()
-
-            username_text_selector = (
-                By.XPATH,
-                '//*[@id="root"]/div/div/input'
-            )
-            username_text_element = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located(username_text_selector)
-            )
-            username_text_element.send_keys('Test')
-
-            start_btn_selector = (
-                By.XPATH,
-                '//*[@id="root"]/div/div/div[2]/a[1]/button'
-            )
-            start_btn_element = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located(start_btn_selector)
-            )
-            start_btn_element.click()
+            xpath_list = [
+                '//*[@id="root"]/div/div/div[1]/button',
+                '//*[@id="root"]/div/div/input',
+                '//*[@id="root"]/div/div/div[2]/a[1]/button',
+            ]
+            action_list = [
+                lambda element: element.click(),
+                lambda element: element.send_key('Test'),
+                lambda element: element.click(),
+            ]
+            for xpath, action in zip(xpath_list, action_list):
+                selector = (By.XPATH, xpath)
+                element = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(selector)
+                )
+                action(element)
 
         except Exception as e:
             print(e)
@@ -80,7 +70,7 @@ class Manager:
             )
         except Exception as e:
             print(e)
-        
+
         return canvas_element
 
 

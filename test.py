@@ -3,7 +3,7 @@ from bot import bot_manager
 
 if __name__ == '__main__':
     my_bot = bot_manager.Manager(
-        driver_path='C:/Users/kunwo/Documents/chromedriver/chromedriver.exe',
+        driver_path='YOUR DRIVER PATH HERE',
         username='bot_test'
     )
     

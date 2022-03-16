@@ -1,6 +1,9 @@
 from typing import Dict
+import os
 
 class Config:
+    driver_path: str = os.path.join('path', 'chromedriver.exe')
+
     url: str = 'http://s0af.panty.run'
 
     name_xpath: Dict[str, str] = {

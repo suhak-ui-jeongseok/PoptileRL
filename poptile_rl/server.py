@@ -4,7 +4,7 @@ from config import Config
 
 if __name__ == '__main__':
     bot_agent = Bot(
-        driver_path='C:/Users/kunwo/Documents/chromedriver/chromedriver.exe',
+        driver_path=Config.driver_path,
         username='bot_test',
         url=Config.url,
         name_xpath=Config.name_xpath

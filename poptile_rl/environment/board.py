@@ -1,4 +1,4 @@
-from typing import List, Tuple, Type
+from typing import List, Tuple
 
 
 class Board:

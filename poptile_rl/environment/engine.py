@@ -1,10 +1,9 @@
 from copy import deepcopy
 from collections import deque
 from random import randrange
-from typing import List, Tuple, Dict
+from typing import List, Tuple
 
-
-from board import Board
+from environment.board import Board
 
 
 # TODO: n_color, row, column은 계속 같이 재활용된다 -> 클래스 하나로 묶을 것
@@ -20,6 +19,7 @@ class Engine:
 
         self.state_history: List[Board] = [board]
         self.action_history: List[Tuple[int, int]] = []
+
 
     def generate_row(self):
         rand_row: List[int] = [randrange(self.board.n_color) for _ in range(self.board.column)]
@@ -54,14 +54,16 @@ class Engine:
 
         while queue:
             cur_row, cur_col = queue.popleft()
+
+            visited[cur_row][cur_col] = True
+            self._delete_tile(cur_row, cur_col)
+            n_tiles += 1
+            
             for d_row, d_col in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
                 mv_row, mv_col = cur_row + d_row, cur_col + d_col
                 if 0 <= mv_row < self.board.row and 0 <= mv_col < self.board.column:
                     if not visited[mv_row][mv_col] and self.board[mv_row, mv_col] == color:
                         queue.append((mv_row, mv_col))
-                        visited[mv_row][mv_col] = True
-                        self._delete_tile(mv_row, mv_col)
-                        n_tiles += 1
 
         return n_tiles
 
@@ -95,25 +97,3 @@ class NewGame(Engine):
         column: int,
     ):
         super().__init__(0, Board(n_color, row, column))
-
-if __name__ == '__main__':
-    game = NewGame(2, 15, 8)
-    game.generate_row()
-    game.generate_row()
-    game.generate_row()
-    game.generate_row()
-    game.generate_row()
-    game.generate_row()
-    game.generate_row()
-    game.generate_row()
-    game.generate_row()
-    game.generate_row()
-
-    print('before')
-    for r in reversed(game.board.state):
-        print(r)
-    
-    game.pop_tile(0, 0)
-    print('after')
-    for r in reversed(game.board.state):
-        print(r)

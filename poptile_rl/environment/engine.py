@@ -3,7 +3,7 @@ from collections import deque
 from random import randrange
 from typing import List, Tuple
 
-from environment.board import Board
+from poptile_rl.environment.board import Board
 
 
 # TODO: n_color, row, column은 계속 같이 재활용된다 -> 클래스 하나로 묶을 것
@@ -58,7 +58,7 @@ class Engine:
             visited[cur_row][cur_col] = True
             self._delete_tile(cur_row, cur_col)
             n_tiles += 1
-            
+
             for d_row, d_col in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
                 mv_row, mv_col = cur_row + d_row, cur_col + d_col
                 if 0 <= mv_row < self.board.row and 0 <= mv_col < self.board.column:

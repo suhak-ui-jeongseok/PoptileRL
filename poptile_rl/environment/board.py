@@ -32,7 +32,7 @@ class Board:
         row, column = key
         self.state[row][column] = value
 
-    
+
     def __getitem__(self, key: Tuple[int, int]) -> int:
         row, column = key
         return self.state[row][column]

@@ -127,11 +127,11 @@ class Bot:
         matrix:List[List[Tuple[int]]] = []
         for row_idx in range(15):
             row = []
-            
+
             for col_idx in range(8):
                 pixel_pos = (col_idx * 30 + 15), ((14 - row_idx) * 30 + 15)
                 row.append(img.getpixel(pixel_pos)[:3])
-            
+
             matrix.append(row)
 
         return matrix

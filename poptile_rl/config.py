@@ -1,5 +1,6 @@
-from typing import Dict
 import os
+from typing import Dict
+
 
 class Config:
     driver_path: str = os.path.join('path', 'chromedriver.exe')
@@ -12,5 +13,5 @@ class Config:
         'start_button': '//*[@id="root"]/div/div/div[2]/a[1]/button',
         'game_canvas': '//*[@id="root"]/div/div/canvas',
         'ingame_score_text': '//*[@id="root"]/div/div/span',
-        'gameover_score_text': '//*[@id="root"]/div/div/h1'
+        'gameover_score_text': '//*[@id="root"]/div/div/h1',
     }

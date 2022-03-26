@@ -1,12 +1,11 @@
 from io import BytesIO
+from typing import Dict, List, Tuple
+
 from PIL import Image
-from typing import List, Tuple, Dict
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.webelement import WebElement
 
 '''
@@ -16,15 +15,13 @@ Bot WebDriverCore에 명령 전달, Bot은 동작의 의미를 담고 있어야 
 
 
 class WebDriverCore:
-    def __init__(
-        self,
-        driver_path: str
-    ):
+    def __init__(self, driver_path: str):
         self.driver = self.init_driver(driver_path)
+
         self.elements: Dict[str, WebElement] = {}
 
-
-    def init_driver(self, driver_path: str) -> Chrome:
+    @staticmethod
+    def init_driver(driver_path: str) -> Chrome:
         options = ChromeOptions()
         options.add_argument('--incognito')
         options.add_argument('--no-sandbox')
@@ -34,54 +31,37 @@ class WebDriverCore:
 
         return Chrome(service=service, chrome_options=options)
 
-
     def quit(self):
         self.driver.close()
         self.driver.quit()
 
-
-    def get(self, _u: str):
-        self.driver.get(url=_u)
-
+    def get(self, u: str):
+        self.driver.get(url=u)
 
     def wait(self):
         self.driver.implicitly_wait(10)
 
-
     def store_elements(self, name: str, xpath: str):
         self.elements[name] = self.driver.find_element(By.XPATH, value=xpath)
 
-
     def send_text(self, name: str, text: str):
         self.elements[name].send_keys(text)
-
 
     def click(self, name: str):
         self.elements[name].click()
 
     def click_with_offset(self, name: str, offset: Tuple[int, int]):
-        ActionChains(self.driver)\
-            .move_to_element_with_offset(self.elements[name], *offset)\
-            .click()\
-            .perform()
-
+        ActionChains(self.driver).move_to_element_with_offset(self.elements[name], *offset).click().perform()
 
     def get_text_from(self, name: str) -> str:
         return self.elements[name].text
-
 
     def get_png_from(self, name: str) -> str:
         return self.elements[name].screenshot_as_png
 
 
 class Bot:
-    def __init__(
-        self,
-        driver_path: str,
-        url: str,
-        username: str,
-        name_xpath: Dict[str, str]
-    ):
+    def __init__(self, driver_path: str, url: str, username: str, name_xpath: Dict[str, str]):
         self.driver_core: WebDriverCore = WebDriverCore(driver_path)
 
         self.url: str = url
@@ -92,13 +72,13 @@ class Bot:
 
         self.start_game()
 
-
     def start_game(self):
-        '''
+        """
         1. toggle animation by click
         2. set username by send_keys
         3. press start button by click
-        '''
+        """
+
         self.driver_core.get(self.url)
         self.driver_core.wait()
 
@@ -114,17 +94,13 @@ class Bot:
 
         self.driver_core.store_elements('game_canvas', self.name_xpath['game_canvas'])
 
-
     def quit(self):
         self.driver_core.quit()
 
-
     def get_tile_matrix(self) -> List[List[Tuple[int]]]:
-        img = Image.open(
-            BytesIO(self.driver_core.get_png_from('game_canvas'))
-        )
+        img = Image.open(BytesIO(self.driver_core.get_png_from('game_canvas')))
 
-        matrix:List[List[Tuple[int]]] = []
+        matrix: List[List[Tuple[int]]] = []
         for row_idx in range(15):
             row = []
 
@@ -136,12 +112,12 @@ class Bot:
 
         return matrix
 
-
-    def poptile(self, pos:Tuple[int, int]):
+    def poptile(self, pos: Tuple[int, int]):
         x, y = pos
-        offset = (x * 30 + 15), ((14 - y) * 30 + 15)
+        offset: Tuple[int, int] = (x * 30 + 15), ((14 - y) * 30 + 15)
         self.driver_core.click_with_offset('game_canvas', offset)
         self.driver_core.wait()
 
-    def is_gameover(self) -> int:
+    @staticmethod
+    def is_gameover() -> bool:
         return False

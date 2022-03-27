@@ -16,6 +16,9 @@ class Engine:
         self.state_history: List[Board] = [board]
         self.action_history: List[Tuple[int, int]] = []
 
+    def copy(self):
+        return Engine(self.score, self.board.copy())
+
     def generate_row(self):
         rand_row: List[int] = [randrange(self.board.n_color) for _ in range(self.board.column)]
         self.board.pop_and_push(rand_row)
@@ -29,7 +32,7 @@ class Engine:
         self.generate_row()
 
         self.score += num_tiles ** 2
-        self.state_history.append(deepcopy(self.board))
+        self.state_history.append(self.board.copy())
         self.action_history.append((row, col))
 
     def search_connected_component(self, row: int, col: int) -> int:

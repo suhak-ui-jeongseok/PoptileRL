@@ -27,6 +27,10 @@ class WebDriverCore:
         options.add_argument('--no-sandbox')
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
+        options.add_argument('headless')
+        options.add_argument('window-size=1920x1080')
+        options.add_argument("disable-gpu")
+
         service = Service(executable_path=driver_path)
 
         return Chrome(service=service, chrome_options=options)
@@ -59,12 +63,15 @@ class WebDriverCore:
     def get_png_from(self, name: str) -> str:
         return self.elements[name].screenshot_as_png
 
+    def get_url(self) -> str:
+        return self.driver.current_url
+
 
 class Bot:
-    def __init__(self, driver_path: str, url: str, username: str, name_xpath: Dict[str, str]):
+    def __init__(self, driver_path: str, url: Dict[str, str], username: str, name_xpath: Dict[str, str]):
         self.driver_core: WebDriverCore = WebDriverCore(driver_path)
 
-        self.url: str = url
+        self.url: Dict[str, str] = url
         self.username: str = username
         self.name_xpath: Dict[str, str] = name_xpath
 
@@ -79,7 +86,7 @@ class Bot:
         3. press start button by click
         """
 
-        self.driver_core.get(self.url)
+        self.driver_core.get(self.url['lobby'])
         self.driver_core.wait()
 
         self.driver_core.store_elements('animation_toggle', self.name_xpath['animation_toggle'])
@@ -113,11 +120,10 @@ class Bot:
         return matrix
 
     def poptile(self, pos: Tuple[int, int]):
-        x, y = pos
-        offset: Tuple[int, int] = (x * 30 + 15), ((14 - y) * 30 + 15)
+        row, column = pos
+        offset: Tuple[int, int] = (column * 30 + 15), ((14 - row) * 30 + 15)
         self.driver_core.click_with_offset('game_canvas', offset)
         self.driver_core.wait()
 
-    @staticmethod
-    def is_gameover() -> bool:
-        return False
+    def is_gameover(self) -> bool:
+        return self.driver_core.get_url() == self.url['gameover']

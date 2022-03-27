@@ -23,13 +23,16 @@ def print_game(data):
 if __name__ == '__main__':
     bot_agent = Bot(driver_path=Config.driver_path, username='bot_test', url=Config.url, name_xpath=Config.name_xpath)
 
-    for i in range(14):
+    for i in range(30):
         rgb_matrix = bot_agent.get_tile_matrix()
         id_matrix = rgb_to_board(rgb_matrix)
         print_game(id_matrix)
 
-        bot_agent.poptile((0, 0))
+        bot_agent.poptile((0, i%8))
+        if bot_agent.is_gameover():
+            print('Gameover')
+            break
     else:
-        input()
+        print('Survived')
 
     bot_agent.quit()

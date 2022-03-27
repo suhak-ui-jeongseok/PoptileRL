@@ -3,9 +3,12 @@ from typing import Dict
 
 
 class Config:
-    driver_path: str = os.path.join('path', 'chromedriver.exe')
+    driver_path: str = os.path.join('PATH', 'chromedriver.exe')
 
-    url: str = 'http://s0af.panty.run'
+    url: Dict[str, str] = {
+        'lobby': 'http://s0af.panty.run',
+        'gameover': 'http://s0af.panty.run/single/result',
+    }
 
     name_xpath: Dict[str, str] = {
         'animation_toggle': '//*[@id="root"]/div/div/div[1]/button',

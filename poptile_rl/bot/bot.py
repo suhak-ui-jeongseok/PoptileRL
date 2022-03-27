@@ -27,6 +27,10 @@ class WebDriverCore:
         options.add_argument('--no-sandbox')
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
+        options.add_argument('headless')
+        options.add_argument('window-size=1920x1080')
+        options.add_argument("disable-gpu")
+
         service = Service(executable_path=driver_path)
 
         return Chrome(service=service, chrome_options=options)
@@ -58,6 +62,9 @@ class WebDriverCore:
 
     def get_png_from(self, name: str) -> str:
         return self.elements[name].screenshot_as_png
+
+    def get_url(self) -> str:
+        return self.driver.current_url
 
 
 class Bot:
@@ -118,6 +125,5 @@ class Bot:
         self.driver_core.click_with_offset('game_canvas', offset)
         self.driver_core.wait()
 
-    @staticmethod
-    def is_gameover() -> bool:
-        return False
+    def is_gameover(self) -> bool:
+        return self.driver_core.get_url() == 'http://s0af.panty.run/single/result'

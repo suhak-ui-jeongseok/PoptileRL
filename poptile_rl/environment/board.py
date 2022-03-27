@@ -11,10 +11,13 @@ class Board:
             state = [[-1 for _ in range(self.column)] for _ in range(self.row)]
         elif isinstance(state, list):
             state = [[ele for ele in line] for line in state]
-        else:
+        else:   
             pass
 
         self.state: List[List[int]] = state
+    
+    def copy(self):
+        return Board(self.n_color, self.row, self.column, self.state)
 
     def pop_and_push(self, line: List[int]):
         self.state.pop()

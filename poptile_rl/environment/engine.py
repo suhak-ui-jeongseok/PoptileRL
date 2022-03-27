@@ -1,15 +1,13 @@
 from collections import deque
-from copy import deepcopy
 from random import randrange
 from typing import List, Tuple
 
 from poptile_rl.environment.board import Board
 
-# TODO: n_color, row, column은 계속 같이 재활용된다 -> 클래스 하나로 묶을 것
-
 
 class Engine:
     def __init__(self, score: int, board: Board):
+        self.gameover_state = False
         self.score = score
         self.board = board
 
@@ -29,11 +27,24 @@ class Engine:
 
         num_tiles: int = self.search_connected_component(row, col)
         self.update_board()
+
+        self.update_gameover_state()
         self.generate_row()
 
         self.score += num_tiles ** 2
         self.state_history.append(self.board.copy())
         self.action_history.append((row, col))
+
+    def is_gameover(self):
+        return self.gameover_state
+
+    def update_gameover_state(self):
+        result = False
+        for value in self.board.state[-1]:
+            if value != -1:
+                result = True
+
+        self.gameover_state |= result
 
     def search_connected_component(self, row: int, col: int) -> int:
         queue: deque[Tuple[int, int]] = deque([(row, col)])
@@ -81,6 +92,8 @@ class Engine:
 
     def _delete_tile(self, row, col):
         self.board[row, col] = -1
+
+
 
 
 class NewGame(Engine):

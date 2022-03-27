@@ -39,3 +39,4 @@ _build/
 *.csv
 *.tsv
 *.ftr
+*.temp

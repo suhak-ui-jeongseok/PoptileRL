@@ -68,10 +68,10 @@ class WebDriverCore:
 
 
 class Bot:
-    def __init__(self, driver_path: str, url: str, username: str, name_xpath: Dict[str, str]):
+    def __init__(self, driver_path: str, url: Dict[str, str], username: str, name_xpath: Dict[str, str]):
         self.driver_core: WebDriverCore = WebDriverCore(driver_path)
 
-        self.url: str = url
+        self.url: Dict[str, str] = url
         self.username: str = username
         self.name_xpath: Dict[str, str] = name_xpath
 
@@ -86,7 +86,7 @@ class Bot:
         3. press start button by click
         """
 
-        self.driver_core.get(self.url)
+        self.driver_core.get(self.url['lobby'])
         self.driver_core.wait()
 
         self.driver_core.store_elements('animation_toggle', self.name_xpath['animation_toggle'])
@@ -120,10 +120,10 @@ class Bot:
         return matrix
 
     def poptile(self, pos: Tuple[int, int]):
-        x, y = pos
-        offset: Tuple[int, int] = (x * 30 + 15), ((14 - y) * 30 + 15)
+        row, column = pos
+        offset: Tuple[int, int] = (column * 30 + 15), ((14 - row) * 30 + 15)
         self.driver_core.click_with_offset('game_canvas', offset)
         self.driver_core.wait()
 
     def is_gameover(self) -> bool:
-        return self.driver_core.get_url() == 'http://s0af.panty.run/single/result'
+        return self.driver_core.get_url() == self.url['gameover']

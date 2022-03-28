@@ -27,7 +27,7 @@ def print_game(data):
 if __name__ == '__main__':
     bot_agent = Bot(Config.driver_path, Config.url, 'bot_test', Config.name_xpath)
 
-    for i in range(1000):
+    for i in range(100000):
         print(f'Iteration {i}')
         rgb_matrix = bot_agent.get_tile_matrix()
         id_matrix = rgb_to_board(rgb_matrix)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
         bot_agent.poptile((pos_r, pos_c))
         engine.pop_tile(pos_r, pos_c)
 
-        sleep(0.3)
+        sleep(0.5)
 
         if bot_agent.is_gameover():
             break

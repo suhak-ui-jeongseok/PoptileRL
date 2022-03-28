@@ -1,16 +1,9 @@
 from typing import Tuple
 from collections import deque
+import numpy as np
 
 from poptile_rl.environment.board import Board
 from poptile_rl.environment.engine import Engine
-
-
-def variance(data):
-    n = len(data)
-    mean = sum(data) / n
-    deviations = [(x - mean) ** 2 for x in data]
-    variance = sum(deviations) / n
-    return variance
 
 
 def avoid_valley(board: Board):
@@ -25,7 +18,7 @@ def avoid_valley(board: Board):
 
         heights.append(row_idx)
 
-    return variance(heights) ** 0.5
+    return np.var(heights)
 
 
 def count_components(board: Board):
@@ -93,9 +86,8 @@ def get_top_height(board: Board) -> int:
 
         heights.append(row_idx)
 
-    heights.sort()
 
-    return heights[-1]
+    return max(heights)
 
 
 def search_best(engine: Engine) -> Tuple[int, int]:
@@ -104,7 +96,7 @@ def search_best(engine: Engine) -> Tuple[int, int]:
 
 
     best_action = (-1, -1)
-    best_value = (100, 100)
+    best_value = 10000000
     for row_idx in range(row):
         for column_idx in range(column):
             if board[row_idx, column_idx] == -1:
@@ -116,7 +108,7 @@ def search_best(engine: Engine) -> Tuple[int, int]:
             if new_engine.is_gameover():
                 continue
 
-            temp_value = (get_top_height(new_engine.board), count_components(new_engine.board))
+            temp_value = get_top_height(new_engine.board) ** 2 + 0.3 + count_components(new_engine.board) ** 2
             if best_value > temp_value:
                 best_action = (row_idx, column_idx)
                 best_value = temp_value
@@ -124,5 +116,5 @@ def search_best(engine: Engine) -> Tuple[int, int]:
     if best_action == (-1, -1):
         best_action = (0, 0)
 
-    print(best_value, best_action)
+    # print(best_value, best_action)
     return best_action

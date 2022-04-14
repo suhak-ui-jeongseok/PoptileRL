@@ -1,1 +1,1 @@
-import poptile_rl.bot.bot
+import bot.bot

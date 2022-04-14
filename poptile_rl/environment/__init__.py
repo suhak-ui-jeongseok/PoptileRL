@@ -1,2 +1,2 @@
-from poptile_rl.environment.board import Board
-from poptile_rl.environment.engine import Engine, NewGame
+from environment.board import Board
+from environment.engine import Engine, NewGame

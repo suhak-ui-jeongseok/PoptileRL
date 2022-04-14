@@ -2,7 +2,7 @@ from collections import deque
 from random import randrange
 from typing import List, Tuple
 
-from poptile_rl.environment.board import Board
+from environment.board import Board
 
 
 class Engine:
@@ -14,6 +14,14 @@ class Engine:
         self.state_history: List[Board] = [board]
         self.action_history: List[Tuple[int, int]] = []
 
+        self.generate_row()
+
+    def __call__(self, state: Board, score: int, row: int, col: int) -> int:
+        self.board = state
+        self.score = score
+        self.pop_tile(row, col)
+        return self.score
+
     def copy(self):
         return Engine(self.score, self.board.copy())
 
@@ -21,7 +29,7 @@ class Engine:
         rand_row: List[int] = [randrange(self.board.n_color) for _ in range(self.board.column)]
         self.board.pop_and_push(rand_row)
 
-    def pop_tile(self, row: int, col: int):
+    def pop_tile(self, row: int, col: int) -> int:
         if self.board[row, col] == -1:
             raise Exception('pop_tile action should be called in valid tile.')
 
@@ -31,9 +39,12 @@ class Engine:
         self.update_gameover_state()
         self.generate_row()
 
-        self.score += num_tiles ** 2
+        score = num_tiles ** 2
+        self.score += score
         self.state_history.append(self.board.copy())
         self.action_history.append((row, col))
+
+        return self.score
 
     def is_gameover(self):
         return self.gameover_state
@@ -92,8 +103,6 @@ class Engine:
 
     def _delete_tile(self, row, col):
         self.board[row, col] = -1
-
-
 
 
 class NewGame(Engine):

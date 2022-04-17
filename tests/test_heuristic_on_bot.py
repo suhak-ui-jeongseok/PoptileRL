@@ -15,7 +15,7 @@ def rgb_to_board(rgb_matrix: List[List[int]]) -> List[List[int]]:
         (0, 255, 171): 1,
         (0, 171, 255): 2
     }
-    return [[rgb2id[e] for e in line] for line in rgb_matrix]
+    return [[rgb2id.get(e, None) for e in line] for line in rgb_matrix]
 
 
 def print_game(data):
@@ -23,26 +23,39 @@ def print_game(data):
     for r in reversed(data):
         print(*map(lambda i: n2c[i], r))
 
+def run():
+    bot_agent = Bot(Config.driver_path, Config.url, 'Magister', Config.name_xpath)
 
-if __name__ == '__main__':
-    bot_agent = Bot(Config.driver_path, Config.url, 'bot_test', Config.name_xpath)
-
+    last_id_matrix = None
     for i in range(100000):
         print(f'Iteration {i}')
-        rgb_matrix = bot_agent.get_tile_matrix()
-        id_matrix = rgb_to_board(rgb_matrix)
+        while True:
+            rgb_matrix = bot_agent.get_tile_matrix()
+            id_matrix = rgb_to_board(rgb_matrix)
+            if last_id_matrix != id_matrix:
+                break
         print_game(id_matrix)
 
         engine = Engine(-1, Board(3, 15, 8, id_matrix))
-        pos_r, pos_c = search_best(engine)
-        bot_agent.poptile((pos_r, pos_c))
-        engine.pop_tile(pos_r, pos_c)
+        best_action = search_best(engine)
+        
+        if i >= 4000:
+            best_action = (0, 0)
 
-        sleep(0.5)
+        bot_agent.poptile(best_action)
 
+        sleep(0.3)
+        
         if bot_agent.is_gameover():
             break
+
     else:
         input()
 
     bot_agent.quit()
+    
+
+
+if __name__ == '__main__':
+    for i in range(10):
+        run()

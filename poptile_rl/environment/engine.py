@@ -31,7 +31,7 @@ class Engine:
         self.generate_row()
 
         self.score += num_tiles ** 2
-        self.last_action = row, col
+        self.last_action = (row, col)
 
     def is_gameover(self):
         return self.gameover_state

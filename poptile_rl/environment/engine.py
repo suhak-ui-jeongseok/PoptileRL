@@ -11,8 +11,7 @@ class Engine:
         self.score = score
         self.board = board
 
-        self.state_history: List[Board] = [board]
-        self.action_history: List[Tuple[int, int]] = []
+        self.last_action: Tuple[int, int] = -1, 1
 
     def copy(self):
         return Engine(self.score, self.board.copy())
@@ -32,8 +31,7 @@ class Engine:
         self.generate_row()
 
         self.score += num_tiles ** 2
-        self.state_history.append(self.board.copy())
-        self.action_history.append((row, col))
+        self.last_action = (row, col)
 
     def is_gameover(self):
         return self.gameover_state

@@ -1,5 +1,6 @@
-from typing import Tuple
 from collections import deque
+from typing import Tuple
+
 import numpy as np
 
 from poptile_rl.environment.board import Board
@@ -50,8 +51,7 @@ def largest_block(board: Board):
                 continue
 
             n_max_block = max(
-                n_max_block,
-                _bfs(mod_board, deque([(row_idx, column_idx)]), mod_board[row_idx, column_idx])
+                n_max_block, _bfs(mod_board, deque([(row_idx, column_idx)]), mod_board[row_idx, column_idx])
             )
 
     return n_max_block
@@ -66,7 +66,8 @@ def _bfs(mod_board: Board, queue: deque, color: int):
         mod_board[now_row, now_col] = -1
         for dr, dc in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
             new_row, new_col = now_row + dr, now_col + dc
-            if 0 <= new_row and new_row < mod_board.row and 0 <= new_col and new_col < mod_board.column:
+            # pylint: disable=chained-comparison
+            if new_row >= 0 and new_row < mod_board.row and new_col >= 0 and new_col < mod_board.column:
                 if mod_board[now_row, now_col] == color:
                     queue.appendleft((new_row, new_col))
 
@@ -85,7 +86,6 @@ def get_top_height(board: Board) -> int:
 
         heights.append(row_idx)
 
-
     return max(heights)
 
 
@@ -93,13 +93,9 @@ def state_value(board: Board) -> int:
     temp_values = {
         'top_height': get_top_height(board),
         'components': count_components(board),
-        'var': avoid_valley(board)
+        'var': avoid_valley(board),
     }
-    return sum([
-        temp_values['top_height'] * 100,
-        (temp_values['components'] ** 2) / 10,
-        temp_values['var'] * 10
-    ])
+    return sum([temp_values['top_height'] * 100, (temp_values['components'] ** 2) / 10, temp_values['var'] * 10])
 
 
 def sub_search(engine: Engine, step: int) -> Tuple[Tuple, int]:
@@ -115,7 +111,7 @@ def sub_search(engine: Engine, step: int) -> Tuple[Tuple, int]:
         for column_idx in range(board.column):
             if board[row_idx, column_idx] == -1:
                 continue
-            
+
             action = (row_idx, column_idx)
             new_engine = engine.copy()
             new_engine.pop_tile(*action)
@@ -128,11 +124,12 @@ def sub_search(engine: Engine, step: int) -> Tuple[Tuple, int]:
             if best_value > value:
                 best_value = value
                 best_action = action
-    
+
     if best_value == 10000000:
         best_action = (0, 0)
-    
+
     return best_action, best_value
+
 
 def search_best(engine: Engine) -> Tuple[int, int]:
     return sub_search(engine, 2)[0]

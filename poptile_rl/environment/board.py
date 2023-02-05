@@ -1,11 +1,10 @@
-import numpy as np
 from typing import List, Tuple
+
+import numpy as np
 
 
 class Board:
-    def __init__(
-        self, n_color: int, row: int, column: int, state: List[List[int]] = None
-    ):
+    def __init__(self, n_color: int, row: int, column: int, state: List[List[int]] = None):
         self.n_color: int = n_color
         self.row: int = row
         self.column: int = column
@@ -13,9 +12,9 @@ class Board:
         if state is None:
             state = [[-1 for _ in range(self.column)] for _ in range(self.row)]
         elif isinstance(state, list):
-            state = [[ele for ele in line] for line in state]
-        else:
             pass
+        else:
+            raise Exception('state type error')
 
         self.state: List[List[int]] = state
 

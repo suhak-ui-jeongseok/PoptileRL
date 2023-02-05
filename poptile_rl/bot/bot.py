@@ -8,11 +8,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-'''
-WebDriverCore driver에 직접 접근
-Bot WebDriverCore에 명령 전달, Bot은 동작의 의미를 담고 있어야 함
-'''
-
 
 class WebDriverCore:
     def __init__(self, driver_path: str):

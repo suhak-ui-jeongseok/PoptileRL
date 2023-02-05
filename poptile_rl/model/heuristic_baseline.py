@@ -1,5 +1,6 @@
-from typing import Tuple
 from collections import deque
+from typing import Tuple
+
 import numpy as np
 
 from poptile_rl.environment.board import Board

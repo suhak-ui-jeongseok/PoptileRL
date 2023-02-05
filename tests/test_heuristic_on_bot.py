@@ -2,10 +2,10 @@ from time import sleep
 from typing import List
 
 from poptile_rl.bot.bot import Bot
-from poptile_rl.environment.engine import Engine
-from poptile_rl.environment.board import Board
-from poptile_rl.model.heuristic_baseline import search_best
 from poptile_rl.config import Config
+from poptile_rl.environment.board import Board
+from poptile_rl.environment.engine import Engine
+from poptile_rl.model.heuristic_baseline import search_best
 
 
 def rgb_to_board(rgb_matrix: List[List[int]]) -> List[List[int]]:

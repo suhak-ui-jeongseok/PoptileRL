@@ -120,7 +120,7 @@ def sub_search(engine: Engine, step: int) -> Tuple[Tuple, int]:
             new_engine = engine.copy()
             new_engine.pop_tile(*action)
 
-            if new_engine.is_gameover():
+            if new_engine.is_gameover:
                 continue
 
             _, value = sub_search(new_engine, step - 1)

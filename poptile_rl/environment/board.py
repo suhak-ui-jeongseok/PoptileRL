@@ -1,8 +1,11 @@
+import numpy as np
 from typing import List, Tuple
 
 
 class Board:
-    def __init__(self, n_color: int, row: int, column: int, state: List[List[int]] = None):
+    def __init__(
+        self, n_color: int, row: int, column: int, state: List[List[int]] = None
+    ):
         self.n_color: int = n_color
         self.row: int = row
         self.column: int = column
@@ -11,11 +14,11 @@ class Board:
             state = [[-1 for _ in range(self.column)] for _ in range(self.row)]
         elif isinstance(state, list):
             state = [[ele for ele in line] for line in state]
-        else:   
+        else:
             pass
 
         self.state: List[List[int]] = state
-    
+
     def copy(self):
         return Board(self.n_color, self.row, self.column, self.state)
 
@@ -31,9 +34,16 @@ class Board:
         row, column = key
         return self.state[row][column]
 
-    # TODO: Board to numpy data
-    def state_as_numpy(self) -> object:
-        pass
+    def state_as_numpy(self) -> np.ndarray:
+        # 0: empty, 1: color1, 2: color2, ...
+        array = np.zeros((self.n_color + 1, self.row, self.column))
+        for row in range(self.row):
+            for column in range(self.column):
+                if self.state[row][column] == -1:
+                    array[0][row][column] = 1
+                else:
+                    array[self.state[row][column] + 1][row][column] = 1
+        return array
 
     def state_as_array(self) -> List[List[int]]:
         return self.state

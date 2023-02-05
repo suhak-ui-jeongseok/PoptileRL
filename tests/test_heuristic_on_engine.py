@@ -27,7 +27,7 @@ if __name__ == '__main__':
                 best_action = (0, 0)
             
             game.pop_tile(*best_action)
-            if game.is_gameover():
+            if game.is_gameover:
                 print(f'Trial {trial} - score: {game.score}')
                 print(f'Avg Time per Iter - {(time.time() - start_time) / i * 1000}')
                 break

@@ -16,5 +16,5 @@ if __name__ == '__main__':
         game.pop_tile(0, i % 8)
         if game.is_gameover():
             break
-    
+
     print(f'score: {game.score}')

@@ -1,5 +1,5 @@
-import numpy as np
 from typing import List, Tuple
+import numpy as np
 
 
 class Board:
@@ -13,9 +13,9 @@ class Board:
         if state is None:
             state = [[-1 for _ in range(self.column)] for _ in range(self.row)]
         elif isinstance(state, list):
-            state = [[ele for ele in line] for line in state]
-        else:
             pass
+        else:
+            raise Exception('state type error')
 
         self.state: List[List[int]] = state
 

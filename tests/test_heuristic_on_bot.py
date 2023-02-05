@@ -38,14 +38,14 @@ def run():
 
         engine = Engine(-1, Board(3, 15, 8, id_matrix))
         best_action = search_best(engine)
-        
+
         if i >= 4000:
             best_action = (0, 0)
 
         bot_agent.poptile(best_action)
 
         sleep(0.3)
-        
+
         if bot_agent.is_gameover():
             break
 
@@ -53,7 +53,7 @@ def run():
         input()
 
     bot_agent.quit()
-    
+
 
 
 if __name__ == '__main__':

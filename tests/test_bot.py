@@ -1,11 +1,19 @@
+import argparse
 from typing import List
 
 from poptile_rl.bot.bot import Bot
 from poptile_rl.config import Config
 
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--play', type=int, default=1)
+    parser.add_argument('--touch', type=int, default=1000)
+    return parser.parse_args()
+
+
 def rgb_to_board(rgb_matrix: List[List[int]]) -> List[List[int]]:
-    rgb2id = { 
+    rgb2id = {
         (255, 255, 255): -1,
         (255, 171, 0): 0,
         (0, 255, 171): 1,
@@ -21,9 +29,14 @@ def print_game(data):
 
 
 if __name__ == '__main__':
+    args = parse_args()
+    play: int = args.play
+    touch: int = args.touch
+    print_board: bool = args.print_board
+
     bot_agent = Bot(driver_path=Config.driver_path, username='bot_test', url=Config.url, name_xpath=Config.name_xpath)
 
-    for i in range(30):
+    for i in range(touch):
         rgb_matrix = bot_agent.get_tile_matrix()
         id_matrix = rgb_to_board(rgb_matrix)
         print_game(id_matrix)

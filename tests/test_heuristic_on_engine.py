@@ -1,12 +1,12 @@
 import time
 
-from poptile_rl.environment.engine import NewGame
+from poptile_rl.environment.engine import Engine, NewGame
 from poptile_rl.model.heuristic_baseline import search_best
 
 
-def print_game(engine):
+def print_game(engine: Engine):
     n2c = ['0', '1', '2', ' ']
-    for r in reversed(game.board.state):
+    for r in reversed(engine.board.state):
         print(*map(lambda i: n2c[i], r))
 
 

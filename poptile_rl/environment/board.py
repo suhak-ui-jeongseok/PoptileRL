@@ -4,9 +4,7 @@ import numpy as np
 
 
 class Board:
-    def __init__(
-        self, n_color: int, row: int, column: int, state: List[List[int]] = None
-    ):
+    def __init__(self, n_color: int, row: int, column: int, state: List[List[int]] = None):
         self.n_color: int = n_color
         self.row: int = row
         self.column: int = column

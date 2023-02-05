@@ -51,8 +51,7 @@ def largest_block(board: Board):
                 continue
 
             n_max_block = max(
-                n_max_block,
-                _bfs(mod_board, deque([(row_idx, column_idx)]), mod_board[row_idx, column_idx])
+                n_max_block, _bfs(mod_board, deque([(row_idx, column_idx)]), mod_board[row_idx, column_idx])
             )
 
     return n_max_block
@@ -87,7 +86,6 @@ def get_top_height(board: Board) -> int:
 
         heights.append(row_idx)
 
-
     return max(heights)
 
 
@@ -95,13 +93,9 @@ def state_value(board: Board) -> int:
     temp_values = {
         'top_height': get_top_height(board),
         'components': count_components(board),
-        'var': avoid_valley(board)
+        'var': avoid_valley(board),
     }
-    return sum([
-        temp_values['top_height'] * 100,
-        (temp_values['components'] ** 2) / 10,
-        temp_values['var'] * 10
-    ])
+    return sum([temp_values['top_height'] * 100, (temp_values['components'] ** 2) / 10, temp_values['var'] * 10])
 
 
 def sub_search(engine: Engine, step: int) -> Tuple[Tuple, int]:
@@ -135,6 +129,7 @@ def sub_search(engine: Engine, step: int) -> Tuple[Tuple, int]:
         best_action = (0, 0)
 
     return best_action, best_value
+
 
 def search_best(engine: Engine) -> Tuple[int, int]:
     return sub_search(engine, 2)[0]

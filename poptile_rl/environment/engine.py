@@ -29,9 +29,7 @@ class Engine:
         return Engine(self._score, self._board.copy())
 
     def generate_row(self):
-        rand_row: List[int] = [
-            randrange(self._board.n_color) for _ in range(self._board.column)
-        ]
+        rand_row: List[int] = [randrange(self._board.n_color) for _ in range(self._board.column)]
         self._board.pop_and_push(rand_row)
 
     def pop_tile(self, row: int, col: int):
@@ -59,9 +57,7 @@ class Engine:
         queue: deque[Tuple[int, int]] = deque([(row, col)])
         color: int = self._board[row, col]
 
-        visited: List[List[bool]] = [
-            [False for _ in range(self._board.column)] for _ in range(self._board.row)
-        ]
+        visited: List[List[bool]] = [[False for _ in range(self._board.column)] for _ in range(self._board.row)]
 
         num_tiles = self.bfs(queue, visited, color)
 
@@ -80,10 +76,7 @@ class Engine:
             for d_row, d_col in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
                 mv_row, mv_col = cur_row + d_row, cur_col + d_col
                 if 0 <= mv_row < self._board.row and 0 <= mv_col < self._board.column:
-                    if (
-                        not visited[mv_row][mv_col]
-                        and self._board[mv_row, mv_col] == color
-                    ):
+                    if not visited[mv_row][mv_col] and self._board[mv_row, mv_col] == color:
                         queue.append((mv_row, mv_col))
 
         return num_tiles

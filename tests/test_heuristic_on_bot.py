@@ -11,9 +11,9 @@ from poptile_rl.config import Config
 def rgb_to_board(rgb_matrix: List[List[int]]) -> List[List[int]]:
     rgb2id = {
         (255, 255, 255): -1,
-        (255, 171, 0): 0,
-        (0, 255, 171): 1,
-        (0, 171, 255): 2
+        (243, 175, 61): 0,
+        (117, 251, 178): 1,
+        (76, 169, 248): 2
     }
     return [[rgb2id.get(e, None) for e in line] for line in rgb_matrix]
 
@@ -37,10 +37,11 @@ def run():
         print_game(id_matrix)
 
         engine = Engine(-1, Board(3, 15, 8, id_matrix))
-        best_action = search_best(engine)
         
-        if i >= 4000:
+        if i >= 10:
             best_action = (0, 0)
+        else:
+            best_action = search_best(engine)
 
         bot_agent.poptile(best_action)
 
@@ -57,5 +58,5 @@ def run():
 
 
 if __name__ == '__main__':
-    for i in range(10):
+    for i in range(3):
         run()

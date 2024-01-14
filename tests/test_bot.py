@@ -7,9 +7,9 @@ from poptile_rl.config import Config
 def rgb_to_board(rgb_matrix: List[List[int]]) -> List[List[int]]:
     rgb2id = { 
         (255, 255, 255): -1,
-        (255, 171, 0): 0,
-        (0, 255, 171): 1,
-        (0, 171, 255): 2
+        (243, 175, 61): 0,
+        (117, 251, 178): 1,
+        (76, 169, 248): 2
     }
     return [[rgb2id[e] for e in line] for line in rgb_matrix]
 

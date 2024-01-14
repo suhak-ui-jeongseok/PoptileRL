@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
+from webdriver_manager.chrome import ChromeDriverManager
 
 '''
 WebDriverCore driver에 직접 접근
@@ -28,12 +29,12 @@ class WebDriverCore:
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
         options.add_argument('headless')
-        options.add_argument('window-size=1920x1080')
+        # options.add_argument('window-size=1920x1080')
         options.add_argument("disable-gpu")
 
-        service = Service(executable_path=driver_path)
+        service = Service(ChromeDriverManager().install())
 
-        return Chrome(service=service, chrome_options=options)
+        return Chrome(service=service, options=options)
 
     def quit(self):
         self.driver.close()
@@ -101,18 +102,22 @@ class Bot:
 
         self.driver_core.store_elements('game_canvas', self.name_xpath['game_canvas'])
 
+        self.canvas_size = Image.open(BytesIO(self.driver_core.get_png_from('game_canvas'))).size
+
     def quit(self):
         self.driver_core.quit()
 
     def get_tile_matrix(self) -> List[List[Tuple[int]]]:
         img = Image.open(BytesIO(self.driver_core.get_png_from('game_canvas')))
 
+        col_size, row_size = self.canvas_size
+
         matrix: List[List[Tuple[int]]] = []
         for row_idx in range(15):
             row = []
 
             for col_idx in range(8):
-                pixel_pos = (col_idx * 30 + 15), ((14 - row_idx) * 30 + 15)
+                pixel_pos = int((col_idx + 0.5) * (col_size / 8)), int((14 - row_idx + 0.5) * (row_size / 15))
                 row.append(img.getpixel(pixel_pos)[:3])
 
             matrix.append(row)
@@ -121,9 +126,13 @@ class Bot:
 
     def poptile(self, pos: Tuple[int, int]):
         row, column = pos
-        offset: Tuple[int, int] = (column * 30 + 15), ((14 - row) * 30 + 15)
+        col_size, row_size = self.canvas_size
+        offset: Tuple[int, int] = int((column + 0.5 - 4) * (col_size / 8)), int((14 - row + 0.5 - 7.5) * (row_size / 15))
+
+        print(col_size, row_size, offset)
         self.driver_core.click_with_offset('game_canvas', offset)
         self.driver_core.wait()
+
 
     def is_gameover(self) -> bool:
         return self.driver_core.get_url() == self.url['gameover']

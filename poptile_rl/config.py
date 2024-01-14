@@ -6,8 +6,8 @@ class Config:
     driver_path: str = os.path.join('PATH', 'chromedriver.exe')
 
     url: Dict[str, str] = {
-        'lobby': 'http://s0af.panty.run',
-        'gameover': 'http://s0af.panty.run/single/result',
+        'lobby': 'https://s0af.panty.run',
+        'gameover': 'https://s0af.panty.run/single/result',
     }
 
     name_xpath: Dict[str, str] = {

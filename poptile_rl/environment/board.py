@@ -1,6 +1,8 @@
 import numpy as np
 from typing import List, Tuple
 
+from torch import Tensor
+
 
 class Board:
     def __init__(
@@ -21,6 +23,9 @@ class Board:
 
     def copy(self):
         return Board(self.n_color, self.row, self.column, self.state)
+    
+    def to_tensor(self) -> Tensor:
+        return Tensor(self.state_as_numpy())
 
     def pop_and_push(self, line: List[int]):
         self.state.pop()

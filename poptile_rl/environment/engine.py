@@ -25,7 +25,10 @@ class Engine:
     def board(self):
         return self._board
 
-    def copy(self):
+    def to_tensor(self):
+        return self._board.to_tensor()
+
+    def copy(self) -> "Engine":
         return Engine(self._score, self._board.copy())
 
     def generate_row(self):

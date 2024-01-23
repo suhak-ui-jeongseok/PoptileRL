@@ -134,5 +134,18 @@ def sub_search(engine: Engine, step: int) -> Tuple[Tuple, int]:
     
     return best_action, best_value
 
+
 def search_best(engine: Engine) -> Tuple[int, int]:
     return sub_search(engine, 2)[0]
+
+
+def select_random(engine: Engine) -> Tuple[int, int]:
+    board = engine.board
+    row, column = board.row, board.column
+
+    while True:
+        row_idx = np.random.randint(0, row)
+        column_idx = np.random.randint(0, column)
+
+        if board[row_idx, column_idx] != -1:
+            return row_idx, column_idx

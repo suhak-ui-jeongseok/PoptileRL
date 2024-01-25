@@ -35,7 +35,7 @@ if __name__ == '__main__':
         print_game(game)
         # print(agent.lookup_survival(game, device).reshape(ROW, COL))
         print(f'{game.score=} {dqn(state.unsqueeze(0).to(device)).item()=}')
-        action = agent.select_action_2(game, device, thr=0.01)
+        action = agent.select_action_2(game, device, thr=0.2)
         game.pop_tile(action // COL, action % COL)
     else:
         print(game.score)

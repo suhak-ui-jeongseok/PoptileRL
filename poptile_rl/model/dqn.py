@@ -78,6 +78,21 @@ class DatasetBuilder:
                     a_type.append((t.state, max_step))
 
         return a_type, b_type
+    
+    def survive_n_step(self, max_step: int):
+        a_type = [] # not max_step
+        b_type = [] # max_step
+        for game in self.history.games:
+            for idx, t in enumerate(game):
+                # look n-steps of state(gameover or on play) ahead.
+                # 0: game over after 1 step
+                # n: would survive n steps
+                if idx + max_step >= len(game):
+                    b_type.append((t.state, 0))
+                else:
+                    a_type.append((t.state, max_step))
+
+        return a_type, b_type
 
 class ResBlock(nn.Module):
     def __init__(self, n_channel: int):
@@ -256,7 +271,7 @@ class Agent(nn.Module):
         #     print(lookup)
 
         if random() < eps and not select_best:
-            r, c = select_best(engine)
+            r, c = search_best(engine)
             return r * 8 + c
             # lookup = self.lookup(engine, device)
             # return choice(np.where(lookup != -1)[0])
@@ -273,12 +288,15 @@ class Agent(nn.Module):
         lookup_2nd = np.zeros_like(lookup)
         
         # for all positive lookups, look up again
-        # for i in np.where(lookup > thr)[0]:
-        #     new_engine = engine.copy()
-        #     new_engine.pop_tile(i // 8, i % 8)
-        #     lookup_2nd[i] = (self.lookup_survival(new_engine, device)).max()
+        for i in np.where(lookup > thr)[0]:
+            new_engine = engine.copy()
+            new_engine.pop_tile(i // 8, i % 8)
+            lookup_2nd[i] = (self.lookup_survival(new_engine, device)).max()
         
-        print(lookup.numpy().reshape(15, 8)[::-1, ::])
-        # print(lookup_2nd.reshape(15, 8)[::-1, ::])
+        # print(lookup.numpy().reshape(15, 8)[::-1, ::])
+        print(lookup_2nd.reshape(15, 8)[::-1, ::])
         
+        if lookup_2nd.max() > 0.995:
+            choice(np.where(lookup_2nd > 0.995)[0])
+
         return lookup.argmax()
